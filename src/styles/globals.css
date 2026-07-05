@@ -1,0 +1,330 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Corvette Legacy — global cinematic styling.
+   Near-black canvas, editorial condensed display type, technical mono spec chips.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --bg: #060608;
+  --fg: #f3f1ea;
+  --fg-dim: #8d8a83;
+  --accent: #e2492d; /* overridden per-chapter via JS on <html> */
+
+  --font-display: 'Oswald Variable', 'Arial Narrow', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scrollbar-width: none; /* Firefox — the progress rail IS the indicator */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+body {
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+  background: var(--bg);
+}
+
+/* Custom cursor is active on fine pointers — hide the native one. */
+@media (pointer: fine) {
+  body.custom-cursor,
+  body.custom-cursor * {
+    cursor: none;
+  }
+}
+
+#root {
+  position: relative;
+  isolation: isolate;
+}
+
+/* ── Lenis smooth-scroll required rules ─────────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ── The persistent WebGL canvas (clears to near-black; car sits on a 3D road) ─ */
+.canvas-root {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  /* pointer-events pass through to the scroll layer; canvas is non-interactive */
+  pointer-events: none;
+}
+
+/* ── Scroll content layer (DOM chapters + overlays) above the canvas ────────── */
+.scroll-root {
+  position: relative;
+  z-index: 1;
+}
+
+/* Invisible spacer that supplies the scroll length (SCROLL_HEIGHT_VH). */
+.scroll-space {
+  width: 100%;
+}
+
+/* ── Scroll-driven story beats over the fixed canvas ────────────────────────── */
+.scene-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Every beat is absolutely positioned; scroll drives opacity so only one shows
+   at a time. Two slots:
+     .beat-title — big headline cards, top-centre (Z06 / ZR1 bookends)
+     .beat-story — descriptive captions, FIXED lower-left column (same place
+                   every phase) so the reading position never jumps. */
+.beat {
+  position: absolute;
+  will-change: opacity, transform;
+}
+.beat-title {
+  top: clamp(3rem, 12vh, 9rem);
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 0 var(--gutter);
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.65);
+}
+.beat-story {
+  left: var(--gutter);
+  bottom: clamp(3rem, 12vh, 7.5rem);
+  max-width: min(46ch, 66vw);
+  text-align: left;
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.85);
+}
+.beat .eyebrow {
+  margin-bottom: 0.9rem;
+}
+/* accent tick before each story lead, like a data marker */
+.beat-story .beat-lead {
+  position: relative;
+  padding-left: 1rem;
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  line-height: 1.05;
+  letter-spacing: 0.005em;
+  font-size: clamp(1.35rem, 3vw, 2.4rem);
+}
+.beat-story .beat-lead::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.12em;
+  bottom: 0.12em;
+  width: 3px;
+  background: var(--accent);
+}
+.beat-sub {
+  margin-top: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.68rem, 1vw, 0.82rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+.beat-story .beat-sub {
+  padding-left: 1rem;
+}
+.beat-title .beat-sub {
+  color: var(--accent);
+}
+
+/* Left-edge scrim: a soft dark gradient so the lower-left story text stays
+   legible even when the car is bright on that side. */
+.story-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    92deg,
+    rgba(6, 6, 8, 0.72) 0%,
+    rgba(6, 6, 8, 0.34) 26%,
+    rgba(6, 6, 8, 0) 54%
+  );
+}
+
+/* Deterministic white flash that masks the Z06→ZR1 model swap. */
+.swap-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 42%, #f4f7ff 0%, #cdd8f5 55%, #aab6dd 100%);
+  mix-blend-mode: screen;
+  will-change: opacity;
+}
+
+/* ── 3D callout labels (drei Html, pinned to engine + cabin points) ─────────── */
+.callout {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  gap: 0.15rem 0.5rem;
+  padding: 0.5rem 0.7rem 0.55rem;
+  min-width: 9rem;
+  background: color-mix(in oklab, #070709 74%, transparent);
+  border: 1px solid color-mix(in oklab, var(--fg) 20%, transparent);
+  border-left: 2px solid var(--accent);
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
+  transform: translate(0, 0);
+  will-change: opacity;
+}
+.callout-dot {
+  grid-row: 1 / 3;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px 1px var(--accent);
+}
+.callout-k {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+.callout-v {
+  grid-column: 2;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  color: var(--fg);
+}
+
+/* ── Typography primitives ──────────────────────────────────────────────────── */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: clamp(0.7rem, 1vw, 0.82rem);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  font-size: clamp(3rem, 11vw, 9.5rem);
+  text-wrap: balance;
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  color: var(--fg-dim);
+  font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+  letter-spacing: 0.04em;
+}
+
+.narrative {
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 1.15vw, 1.05rem);
+  line-height: 1.65;
+  color: color-mix(in oklab, var(--fg) 82%, transparent);
+  max-width: 42ch;
+}
+
+/* Spec chips read like a data readout. */
+.spec-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid color-mix(in oklab, var(--fg) 16%, transparent);
+}
+.spec-chip .k {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+.spec-chip .v {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  letter-spacing: 0.01em;
+}
+.spec-chip .v .note {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-style: italic;
+  color: var(--accent);
+  margin-left: 0.4rem;
+  letter-spacing: 0.05em;
+  text-transform: none;
+}
+
+/* A subtle scrim keeps copy legible over a bright car chapter (a11y contrast). */
+.text-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    rgba(10, 10, 10, 0.72) 0%,
+    rgba(10, 10, 10, 0.32) 34%,
+    rgba(10, 10, 10, 0) 62%
+  );
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

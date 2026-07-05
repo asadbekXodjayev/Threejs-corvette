@@ -1,0 +1,42 @@
+{
+  "name": "corvette-legacy",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Corvette Legacy — a scrollytelling 3D experience across three generations of Corvette.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "assets:optimize": "node scripts/optimize-assets.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/jetbrains-mono": "^5.0.0",
+    "@fontsource-variable/oswald": "^5.0.0",
+    "@gsap/react": "^2.1.0",
+    "@react-three/drei": "^10.0.0",
+    "@react-three/fiber": "^9.0.0",
+    "@react-three/postprocessing": "^3.0.0",
+    "detect-gpu": "^5.0.0",
+    "gsap": "^3.13.0",
+    "lenis": "^1.1.0",
+    "postprocessing": "^6.37.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "simplex-noise": "^4.0.0",
+    "three": "^0.180.0",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@gltf-transform/cli": "^4.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.180.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "playwright": "^1.61.1",
+    "r3f-perf": "^7.2.1",
+    "typescript": "^5.6.0",
+    "vite": "^6.0.0"
+  }
+}

@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/config/cars.config.ts","./src/hooks/usecapability.ts","./src/lib/curves.ts","./src/lib/noise.ts","./src/scene/car.tsx","./src/scene/debugexperience.tsx","./src/scene/preload.ts","./src/scroll/progress.ts","./src/state/usestore.ts"],"errors":true,"version":"5.9.3"}

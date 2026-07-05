@@ -1,0 +1,16 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.vite
+
+# dev/debug artifacts
+*.log
+scratch-*.png
+test-results
+playwright-report
+
+# Large source models kept out of git; compressed copies live in public/models
+/*.glb
+!public/models/*.glb
