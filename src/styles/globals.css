@@ -320,6 +320,67 @@ html.lenis body {
   border-radius: 2px;
 }
 
+/* ── Small phones (portrait, ≤640px) ────────────────────────────────────────
+   The car now fits horizontally (ResponsiveCamera), so the job here is the DOM
+   overlay: give captions the full narrow width, pull the title/story columns in
+   off the edges, and shrink the pinned 3D callout chrome so it doesn't crowd the
+   car. The left legibility scrim is widened because the story column spans a much
+   larger fraction of a phone's width. */
+@media (max-width: 640px) {
+  .headline {
+    font-size: clamp(2.3rem, 13vw, 4.6rem);
+  }
+  .beat-title {
+    top: clamp(1.75rem, 8vh, 5rem);
+    padding: 0 var(--gutter);
+  }
+  .beat-story {
+    max-width: min(40ch, 90vw);
+    bottom: clamp(1.75rem, 9vh, 5rem);
+  }
+  .beat-story .beat-lead {
+    font-size: clamp(1.15rem, 5.6vw, 1.7rem);
+  }
+  .beat-sub {
+    letter-spacing: 0.16em;
+  }
+  .story-scrim {
+    background: linear-gradient(
+      90deg,
+      rgba(6, 6, 8, 0.84) 0%,
+      rgba(6, 6, 8, 0.52) 42%,
+      rgba(6, 6, 8, 0) 80%
+    );
+  }
+  .callout {
+    min-width: 0;
+    padding: 0.4rem 0.55rem 0.45rem;
+    gap: 0.1rem 0.4rem;
+  }
+  .callout-k {
+    font-size: 0.54rem;
+    letter-spacing: 0.16em;
+  }
+  .callout-v {
+    font-size: 0.82rem;
+  }
+}
+
+/* ── Landscape phones (short viewports, ≤480px tall) ─────────────────────────
+   Barely any vertical room between the top title and bottom story — tighten both
+   insets and cap the headline to viewport height so it can't swallow the frame. */
+@media (max-height: 480px) {
+  .beat-title {
+    top: clamp(0.75rem, 5vh, 2.5rem);
+  }
+  .beat-story {
+    bottom: clamp(0.75rem, 6vh, 3rem);
+  }
+  .headline {
+    font-size: clamp(1.9rem, 9vh, 4rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.001ms !important;

@@ -1,5 +1,5 @@
 import { Html } from '@react-three/drei'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { CALLOUTS } from '../config/cars.config'
 import { scroll } from '../scroll/progress'
@@ -22,8 +22,23 @@ function fade(p: number, a: number, b: number, c: number, d: number) {
  * tracks it as the camera flies; we drive opacity via a ref each frame (no React
  * re-render). Non-interactive — matches the pointer-events:none canvas.
  */
+// drei <Html distanceFactor> scales the label with camera distance. The reveal
+// shots cluster three engine labels close together, so on a narrow phone they
+// overlap and spill off-screen — shrink them as the viewport narrows.
+const factorForWidth = (w: number) => (w < 640 ? 2 : w < 900 ? 2.5 : 3)
+
 export function Callouts() {
   const refs = useRef<(HTMLDivElement | null)[]>([])
+  const [distanceFactor, setDistanceFactor] = useState(() =>
+    typeof window === 'undefined' ? 3 : factorForWidth(window.innerWidth),
+  )
+
+  useEffect(() => {
+    const onResize = () => setDistanceFactor(factorForWidth(window.innerWidth))
+    onResize()
+    window.addEventListener('resize', onResize, { passive: true })
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   useFrame(() => {
     const reduced = useStore.getState().reducedMotion
@@ -45,7 +60,7 @@ export function Callouts() {
           key={c.label}
           position={c.at}
           center
-          distanceFactor={3}
+          distanceFactor={distanceFactor}
           zIndexRange={[3, 0]}
           style={{ pointerEvents: 'none' }}
         >

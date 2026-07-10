@@ -6,6 +6,7 @@ import { StageLighting } from './StageLighting'
 import { RoomEnv } from './RoomEnv'
 import { SceneDriver } from './SceneDriver'
 import { CameraRig } from './CameraRig'
+import { ResponsiveCamera } from './ResponsiveCamera'
 import { CarStage } from './CarStage'
 import { Callouts } from './Callouts'
 import { Road } from './Road'
@@ -62,6 +63,7 @@ export function Experience() {
         <StageLighting />
         <RoomEnv intensity={0.55} />
         <Road />
+        <ResponsiveCamera />
         <CameraRig />
         <CarStage />
         <Callouts />
